@@ -1,8 +1,8 @@
-# lomfu-backend
+# eduak-backend
 
 ### DESCRIPTION
 
-This is the backend for lomfu project.
+This is the backend for eduak platform.
 
 ### FEATURES
 
@@ -16,7 +16,7 @@ This is the backend for lomfu project.
 ### PROJECT STRUCTURE
 
 ```
-lomfu-backend/
+eduak-backend/
 ├── config/
 │   ├── __init__.py
 │   ├── settings.py
@@ -72,7 +72,7 @@ git clone https://github.com/akfaqih3/lomfu-backend.git
 ## change directory to project
 
 ```bash
-cd lomfu-backend
+cd eduak-backend
 ```
 
 ## create virtual environment
@@ -142,7 +142,7 @@ python manage.py runserver
 ```
 
 
-## github repo  go to https://github.com/akfaqih3/lomfu-backend
+## github repo  go to https://github.com/akfaqih3/eduak-backend
 
 
 
