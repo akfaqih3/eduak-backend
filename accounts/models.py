@@ -32,16 +32,22 @@ class User(AbstractUser):
     first_name = None
     last_name = None
 
-    name = models.CharField(max_length=100, null=True, blank=True)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=20,null=True, unique=True)
-    role = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.TEACHER)
+    name = models.CharField(max_length=100, null=True, blank=True, db_index=True)
+    email = models.EmailField(unique=True, db_index=True)
+    phone = models.CharField(max_length=20, null=True, unique=True)
+    role = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.TEACHER, db_index=True)
     is_active = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['email', 'role']),
+            models.Index(fields=['is_active', 'role']),
+        ]
 
     def __str__(self):
         return self.email
