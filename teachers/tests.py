@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.urls import reverse
@@ -43,12 +44,17 @@ class CourseCreateTest(APITestCase):
     
     def setUp(self):
         self.client = APIClient()
+        # Create required groups
+        teacher_group, _ = Group.objects.get_or_create(name='teacher')
+        Group.objects.get_or_create(name='student')
+        
         self.teacher = User.objects.create_user(
             email='teacher@example.com',
             password='testpass123'
         )
         self.teacher.role = UserRole.TEACHER
         self.teacher.is_active = True
+        self.teacher.groups.add(teacher_group)
         self.teacher.save()
         
         self.subject = Subject.objects.create(
@@ -62,11 +68,11 @@ class CourseCreateTest(APITestCase):
     def test_create_course_success(self):
         """Test teacher can create course"""
         data = {
-            'subject': self.subject.id,
+            'subject': self.subject.slug,
             'title': 'Python Course',
             'overview': 'Learn Python from scratch'
         }
-        response = self.client.post(self.create_url, data)
+        response = self.client.post(self.create_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Course.objects.filter(title='Python Course').exists())
     
@@ -74,11 +80,11 @@ class CourseCreateTest(APITestCase):
         """Test creating course without authentication"""
         self.client.force_authenticate(user=None)
         data = {
-            'subject': self.subject.id,
+            'subject': self.subject.slug,
             'title': 'Python Course',
             'overview': 'Learn Python'
         }
-        response = self.client.post(self.create_url, data)
+        response = self.client.post(self.create_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
@@ -87,12 +93,17 @@ class TeacherCourseListTest(APITestCase):
     
     def setUp(self):
         self.client = APIClient()
+        # Create required groups
+        teacher_group, _ = Group.objects.get_or_create(name='teacher')
+        Group.objects.get_or_create(name='student')
+        
         self.teacher = User.objects.create_user(
             email='teacher@example.com',
             password='testpass123'
         )
         self.teacher.role = UserRole.TEACHER
         self.teacher.is_active = True
+        self.teacher.groups.add(teacher_group)
         self.teacher.save()
         
         self.subject = Subject.objects.create(
@@ -122,12 +133,17 @@ class CourseUpdateTest(APITestCase):
     
     def setUp(self):
         self.client = APIClient()
+        # Create required groups
+        teacher_group, _ = Group.objects.get_or_create(name='teacher')
+        Group.objects.get_or_create(name='student')
+        
         self.teacher = User.objects.create_user(
             email='teacher@example.com',
             password='testpass123'
         )
         self.teacher.role = UserRole.TEACHER
         self.teacher.is_active = True
+        self.teacher.groups.add(teacher_group)
         self.teacher.save()
         
         self.other_teacher = User.objects.create_user(
@@ -136,6 +152,7 @@ class CourseUpdateTest(APITestCase):
         )
         self.other_teacher.role = UserRole.TEACHER
         self.other_teacher.is_active = True
+        self.other_teacher.groups.add(teacher_group)
         self.other_teacher.save()
         
         self.subject = Subject.objects.create(
@@ -156,11 +173,11 @@ class CourseUpdateTest(APITestCase):
         """Test teacher can update their own course"""
         self.client.force_authenticate(user=self.teacher)
         data = {
-            'subject': self.subject.id,
+            'subject': self.subject.slug,
             'title': 'Advanced Python',
             'overview': 'Advanced Python concepts'
         }
-        response = self.client.put(self.update_url, data)
+        response = self.client.put(self.update_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.course.refresh_from_db()
         self.assertEqual(self.course.title, 'Advanced Python')
@@ -169,11 +186,11 @@ class CourseUpdateTest(APITestCase):
         """Test teacher cannot update other's course"""
         self.client.force_authenticate(user=self.other_teacher)
         data = {
-            'subject': self.subject.id,
+            'subject': self.subject.slug,
             'title': 'Hacked Course',
             'overview': 'Hacked'
         }
-        response = self.client.put(self.update_url, data)
+        response = self.client.put(self.update_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
@@ -182,12 +199,17 @@ class CourseDeleteTest(APITestCase):
     
     def setUp(self):
         self.client = APIClient()
+        # Create required groups
+        teacher_group, _ = Group.objects.get_or_create(name='teacher')
+        Group.objects.get_or_create(name='student')
+        
         self.teacher = User.objects.create_user(
             email='teacher@example.com',
             password='testpass123'
         )
         self.teacher.role = UserRole.TEACHER
         self.teacher.is_active = True
+        self.teacher.groups.add(teacher_group)
         self.teacher.save()
         
         self.subject = Subject.objects.create(

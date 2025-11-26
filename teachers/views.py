@@ -87,7 +87,15 @@ class CourseUpdateAPI(APIView):
     ]
     serializer_class = CourseInputSerializer
     
+    def get_object(self, pk):
+        course = course_detail(pk=pk)
+        self.check_object_permissions(self.request, course)
+        return course
+    
     def put(self, request, pk):
+        # Check permissions first
+        course = self.get_object(pk)
+        
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             course = course_update(

@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.urls import reverse
@@ -59,6 +60,10 @@ class UserRegistrationTest(APITestCase):
     
     def setUp(self):
         self.client = APIClient()
+        # Create required groups
+        Group.objects.get_or_create(name='teacher')
+        Group.objects.get_or_create(name='student')
+        
         self.register_url = reverse('user-register')
         self.valid_data = {
             'name': 'Test User',
@@ -96,6 +101,10 @@ class OTPTest(APITestCase):
     
     def setUp(self):
         self.client = APIClient()
+        # Create required groups
+        Group.objects.get_or_create(name='teacher')
+        Group.objects.get_or_create(name='student')
+        
         self.user = User.objects.create_user(
             email='test@example.com',
             password='testpass123'
@@ -119,6 +128,10 @@ class UserProfileTest(APITestCase):
     
     def setUp(self):
         self.client = APIClient()
+        # Create required groups
+        Group.objects.get_or_create(name='teacher')
+        Group.objects.get_or_create(name='student')
+        
         self.user = User.objects.create_user(
             email='test@example.com',
             password='testpass123'
