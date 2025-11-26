@@ -5,11 +5,10 @@ from .views import (
     CourseDetailAPI,
 )
 
-urlpatterns= [
-    path('subjects/',SubjectViewSet.as_view({'get': 'list'})),
-    path('subjects/<slug:slug>/',SubjectViewSet.as_view({'get': 'retrieve'})),
+urlpatterns = [
+    path('subjects/', SubjectViewSet.as_view({'get': 'list'}), name='subject-list'),
+    path('subjects/<slug:slug>/', SubjectViewSet.as_view({'get': 'retrieve'}), name='subject-detail'),
 
-    path('',CourseListAPI.as_view()),
-    path('<int:id>/',CourseDetailAPI.as_view()),
-
+    path('', CourseListAPI.as_view(), name='course-list'),
+    path('<int:id>/', CourseDetailAPI.as_view(), name='course-detail'),
 ]
