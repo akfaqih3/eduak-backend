@@ -2,7 +2,9 @@
 
 ### DESCRIPTION
 
+
 This is the backend for eduak project - A modern E-learning platform built with Django REST Framework.
+
 
 ### FEATURES
 
@@ -101,12 +103,6 @@ source .venv/bin/activate #linux or mac
 pip install -r requirements.txt
 ```
 
-## migrate database
-
-```bash
-python manage.py migrate
-```
-
 ## create .env file for environment variable
 
 paste this in .env file you have created:
@@ -130,6 +126,12 @@ GOOGLE_CLIENT_ID = # paste your google client id here
 GOOGLE_CLIENT_SECRET = # paste your google client secret here
 GOOGLE_REDIRECT_URI = http://127.0.0.1:8000/api/v1/accounts/google/login/
 
+```
+
+## migrate database
+
+```bash
+python manage.py migrate
 ```
 
 # create super user
@@ -219,7 +221,8 @@ This project is licensed under the MIT License.
 
 ## GitHub Repository
 
-https://github.com/akfaqih3/eduak-backend
+## github repo  go to https://github.com/akfaqih3/eduak-backend
+
 
 
 
