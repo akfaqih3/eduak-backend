@@ -23,12 +23,12 @@ urlpatterns = [
     path('logout/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('password-reset/', include('django_rest_passwordreset.urls'), name='password_reset'),
 
-    path('register/', UserCreateAPI.as_view()),
-    path('profile/', UserProfileAPI.as_view()),
-    path('update/', UserUpdateAPI.as_view()),
-    path('change-password/', UserChangePasswordAPI.as_view()),
-    path('otp-send/', OTPSendAPI.as_view()),
-    path('otp-verify/', OTPVerifyAPI.as_view()),
+    path('register/', UserCreateAPI.as_view(), name='user-register'),
+    path('profile/', UserProfileAPI.as_view(), name='user-profile'),
+    path('update/', UserUpdateAPI.as_view(), name='user-update'),
+    path('change-password/', UserChangePasswordAPI.as_view(), name='user-change-password'),
+    path('otp-send/', OTPSendAPI.as_view(), name='otp-send'),
+    path('otp-verify/', OTPVerifyAPI.as_view(), name='otp-verify'),
 
     path('google/login/', LoginByGoogleView.as_view(), name='google_login'),
 ]
