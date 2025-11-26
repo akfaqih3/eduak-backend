@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-import base64
 
 from .serializers import (
     CourseInputSerializer,
@@ -78,13 +77,7 @@ class CourseDetailAPI(APIView):
     def get(self, request, pk):
         course = self.get_object(pk)
         serializer = self.serializer_class(course)
-        course_detail = serializer.data
-        photo = course.photo
-        if photo:
-            with open(photo.path, 'rb') as img_file:
-                encoded_string = base64.b64encode(img_file.read()).decode('utf-8')
-            course_detail['photo'] = encoded_string
-        return Response(course_detail, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 @extend_schema(tags=['Teachers'])
 class CourseUpdateAPI(APIView):

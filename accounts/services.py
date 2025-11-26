@@ -46,7 +46,7 @@ def send_otp(email: str):
         raise serializers.ValidationError({"detail":"has already been verified."})
     otp_code = otp.generate_otp(email)
     send_mail(
-        subject='OTP for lomfu',
+        subject='OTP for eduak',
         message=f'Your OTP is {otp_code}',
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=[email],
@@ -70,6 +70,7 @@ def user_update(user, name=None, email=None, phone=None, role=None, photo=None, 
     if email is not None:
         if User.objects.exclude(id=user.id).filter(email=email).first():
             raise serializers.ValidationError({"detail":'Email already exists'})
+        user.email = email
     if phone is not None:
         user.phone = phone
     if role is not None:
@@ -100,13 +101,16 @@ def google_login(code):
     user_info = google.get_user()
     user = User.objects.filter(email=user_info['email']).first()
     if user is None:
-        user = user_create(
-            user_info['name'],
-            user_info['email'],
-            UserRole.STUDENT,
-            settings.SECRET_KEY,
-        )
+        # Create user with unusable password for OAuth users
+        user = User.objects.create_user(email=user_info['email'])
+        user.name = user_info['name']
+        user.role = UserRole.STUDENT
         user.is_active = user_info['verified_email']
+        user.set_unusable_password()  # OAuth users don't need password
+        user.groups.clear()
+        user.groups.add(Group.objects.get(name=UserRole.STUDENT))
+        user.save()
+        profile_create(user, None, None)
 
     # user.profile.photo = user_info['picture']
     user.last_login = timezone.now()

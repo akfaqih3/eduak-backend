@@ -2,16 +2,25 @@
 
 ### DESCRIPTION
 
-This is the backend for eduak platform.
+
+This is the backend for eduak project - A modern E-learning platform built with Django REST Framework.
+
 
 ### FEATURES
 
-- Authentication by email and password.
-- Authorization by JWT(Json Web Token).
-- Custom user model for teachers and students.
-- Users operations (registration, login, logout, profile, forgot password, password change, email verification).
-- CRUD operations for teachers and courses.
-- API documentation by swagger ui.
+- 🔐 Authentication by email and password
+- 🎫 Authorization by JWT (Json Web Token) with token rotation and blacklisting
+- 👥 Custom user model for teachers and students
+- 📧 Email verification with OTP
+- 🔑 Google OAuth2 authentication
+- 👨‍🏫 CRUD operations for teachers and courses
+- 📚 Course management with modules and content
+- 🎓 Student enrollment system
+- 📖 API documentation by Swagger UI and ReDoc
+- 🚀 Rate limiting for API protection
+- 🔒 Security best practices implemented
+- 🐳 Docker support for easy deployment
+- 📊 Database indexing for better performance
 
 ### PROJECT STRUCTURE
 
@@ -66,7 +75,7 @@ eduak-backend/
 ## get project from github
 
 ```bash
-git clone https://github.com/akfaqih3/lomfu-backend.git
+git clone https://github.com/akfaqih3/eduak-backend.git
 ```
 
 ## change directory to project
@@ -142,7 +151,78 @@ python manage.py runserver
 ```
 
 
+## Docker Deployment (Recommended)
+
+### Using Docker Compose
+
+```bash
+# Build and run containers
+docker-compose up -d --build
+
+# Run migrations
+docker-compose exec web python manage.py migrate
+
+# Create superuser
+docker-compose exec web python manage.py createsuperuser
+
+# Access the application
+# http://localhost:8000/swagger/
+```
+
+## Production Deployment
+
+### Additional Settings for Production
+
+Add these to your .env file:
+
+```
+ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+CORS_ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+```
+
+### Security Checklist
+
+- ✅ SECRET_KEY is secure and not exposed
+- ✅ DEBUG is set to False
+- ✅ ALLOWED_HOSTS is properly configured
+- ✅ CORS settings are configured
+- ✅ SSL/HTTPS is enabled
+- ✅ Database credentials are secure
+- ✅ Rate limiting is enabled
+
+## API Documentation
+
+- Swagger UI: http://localhost:8000/swagger/
+- ReDoc: http://localhost:8000/redoc/
+- OpenAPI Schema: http://localhost:8000/schema/
+
+## Testing
+
+```bash
+# Run tests (when implemented)
+python manage.py test
+
+# Run with coverage
+coverage run --source='.' manage.py test
+coverage report
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License.
+
+## GitHub Repository
+
 ## github repo  go to https://github.com/akfaqih3/eduak-backend
+
 
 
 

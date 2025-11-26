@@ -22,26 +22,23 @@ class CourseEnrollAPI(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def post(self, request, pk, format=None):
-        try:
-            course = get_object_or_404(Course, pk=pk)
-            user = request.user
-            if course.owner == user:
-                return Response(
-                    {'detail': 'You cannot enroll in your own course'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            if user in course.students.all():
-                return Response(
-                    {'detail': 'You are already enrolled in this course'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            course.students.add(user)
+        course = get_object_or_404(Course, pk=pk)
+        user = request.user
+        if course.owner == user:
             return Response(
-                {'detail': 'You have enrolled in this course'},
-                status=status.HTTP_200_OK
+                {'detail': 'You cannot enroll in your own course'},
+                status=status.HTTP_400_BAD_REQUEST
             )
-        except Exception as e:
-            return Response({'detail': str(e)})
+        if user in course.students.all():
+            return Response(
+                {'detail': 'You are already enrolled in this course'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        course.students.add(user)
+        return Response(
+            {'detail': 'You have enrolled in this course'},
+            status=status.HTTP_200_OK
+        )
         
 @extend_schema(tags=['Students'])
 class CoursesEnrolledAPI(ListAPIView):
@@ -51,12 +48,4 @@ class CoursesEnrolledAPI(ListAPIView):
     
     def get_queryset(self):
         user = self.request.user
-        courses = user.courses_joined.all()
-        serilizer = self.serializer_class(courses, many=True)
-        return serilizer.data
-    
-    def get(self, request, format=None):
-        return Response(
-            self.get_queryset(),
-            status=status.HTTP_200_OK
-        )
+        return user.courses_joined.select_related('owner', 'subject').prefetch_related('students').all()

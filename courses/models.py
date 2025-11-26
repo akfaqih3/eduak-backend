@@ -11,8 +11,8 @@ from django.template.defaultfilters import slugify
 User = get_user_model()
 
 class Subject(models.Model):
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200, unique=True)
+    title = models.CharField(max_length=200, db_index=True)
+    slug = models.SlugField(max_length=200, unique=True, db_index=True)
     photo = models.ImageField(
         upload_to='courses/subjects/photos/%Y/%m/%d/',
         blank=True
@@ -33,18 +33,20 @@ class Course(models.Model):
     owner = models.ForeignKey(
         User,
         related_name='courses_created',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        db_index=True
     )
 
     subject = models.ForeignKey(
         Subject,
         related_name='courses',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        db_index=True
     )
 
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, db_index=True)
     overview = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
     students = models.ManyToManyField(
         User,
         related_name='courses_joined',
@@ -67,6 +69,11 @@ class Course(models.Model):
 
     class Meta:
         ordering = ['-created']
+        indexes = [
+            models.Index(fields=['subject', '-created']),
+            models.Index(fields=['owner', '-created']),
+            models.Index(fields=['title', '-created']),
+        ]
 
     def __str__(self):
         return self.title
