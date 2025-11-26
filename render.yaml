@@ -5,7 +5,6 @@ services:
     env: docker
     plan: free
     region: frankfurt
-    ipAllowList: []
 
   # Web Service (Django API)
   - type: web
