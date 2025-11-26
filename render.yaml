@@ -1,11 +1,11 @@
-services:
-  # PostgreSQL Database
-  - type: pserv
-    name: eduak-db
-    env: docker
+databases:
+  - name: eduak-db
+    databaseName: eduak_db
+    user: eduak_user
     plan: free
     region: frankfurt
 
+services:
   # Web Service (Django API)
   - type: web
     name: eduak-backend
