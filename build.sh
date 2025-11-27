@@ -11,3 +11,6 @@ python manage.py collectstatic --no-input
 
 # Run migrations
 python manage.py migrate
+
+# create super user
+python manage.py createsuperuser --no-input
