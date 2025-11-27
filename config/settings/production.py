@@ -8,7 +8,8 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 # Database configuration
 # Use DATABASE_URL if available (Render, Heroku, etc.)
 # Otherwise fall back to individual settings
-DATABASE_URL = config('DATABASE_URL', default=None)
+import os
+DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default='')
 
 if DATABASE_URL:
     DATABASES = {
@@ -17,12 +18,12 @@ if DATABASE_URL:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': config('DB_ENGINE'),
-            'NAME': config('DB_NAME'),
-            'USER': config('DB_USER'),
-            'PASSWORD': config('DB_PASSWORD'),
-            'HOST': config('DB_HOST'),
-            'PORT': config('DB_PORT'),
+            'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql'),
+            'NAME': config('DB_NAME', default='eduak_db'),
+            'USER': config('DB_USER', default='eduak_user'),
+            'PASSWORD': config('DB_PASSWORD', default=''),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
         }
     }
 
