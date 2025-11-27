@@ -3,7 +3,7 @@ from decouple import config
 import dj_database_url
 
 DEBUG = False
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
+ALLOWED_HOSTS = [h.strip() for h in config('ALLOWED_HOSTS', default='').split(',') if h.strip()]
 
 # Database configuration
 # Use DATABASE_URL if available (Render, Heroku, etc.)
@@ -36,7 +36,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # CORS Settings for production
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='').split(',')
+CORS_ALLOWED_ORIGINS = [o.strip() for o in config('CORS_ALLOWED_ORIGINS', default='').split(',') if o.strip()]
 
 # Security Settings
 SECURE_SSL_REDIRECT = True
